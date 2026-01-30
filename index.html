@@ -13,7 +13,7 @@
         .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; }
         .header-stats { display: flex; justify-content: center; gap: 20px; margin-top: 10px; font-size: 0.875rem; }
         .header-stats span { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; position: relative; z-index: 5; }
         .tab { padding: 10px 20px; border: none; background: var(--card); border-radius: 8px; cursor: pointer; font-size: 0.9rem; white-space: nowrap; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .tab.active { background: var(--primary); color: white; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -37,7 +37,10 @@
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
-        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 10; margin-bottom: 70px; }
+        .quiz-footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); padding: 12px 16px; border-top: 1px solid var(--border); display: none; z-index: 100; }
+        .quiz-footer.show { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .quiz-footer .btn { flex: 1; max-width: 150px; }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #7c3aed); transition: width 0.3s ease; }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -146,6 +149,11 @@
                     <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">确认答案</button>
                     <button class="btn btn-success" id="nextBtn" onclick="nextQuestion()">下一题</button>
                 </div>
+            </div>
+            <div class="quiz-footer" id="quizFooter">
+                <button class="btn btn-outline" id="footerPrevBtn" onclick="prevQuestion()">上一题</button>
+                <button class="btn btn-primary" id="footerSubmitBtn" onclick="submitAnswer()">确认答案</button>
+                <button class="btn btn-success" id="footerNextBtn" onclick="nextQuestion()">下一题</button>
             </div>
             <div id="qNavPanel" class="card hidden"><h4 style="margin-bottom: 12px;">题目导航</h4><div class="q-nav" id="qNav"></div></div>
             <div id="resultPanel" class="hidden">
@@ -435,8 +443,12 @@
 
         document.getElementById('answerResult').classList.remove('show', 'correct', 'wrong');
         document.getElementById('prevBtn').disabled = currentIndex === 0;
+        document.getElementById('footerPrevBtn').disabled = currentIndex === 0;
         document.getElementById('submitBtn').style.display = 'inline-block';
+        document.getElementById('footerSubmitBtn').style.display = 'inline-block';
         document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('footerNextBtn').style.display = 'none';
+        document.getElementById('quizFooter').classList.remove('show');
         updateQuestionNav();
     }
 
@@ -493,7 +505,10 @@
         if (!isCorrect) { window.wrongQuestionIds.add(q.id); saveWrongAnswers(); }
 
         document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('footerSubmitBtn').style.display = 'none';
         document.getElementById('nextBtn').style.display = 'inline-block';
+        document.getElementById('footerNextBtn').style.display = 'inline-block';
+        document.getElementById('quizFooter').classList.add('show');
         updateStats();
     }
 
@@ -502,6 +517,7 @@
     }
 
     function nextQuestion() {
+        document.getElementById('quizFooter').classList.remove('show');
         if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); updateProgress(); }
         else { showResult(); }
     }
@@ -514,6 +530,7 @@
         document.getElementById('questionPanel').classList.toggle('hidden', tab !== 'current');
         document.getElementById('qNavPanel').classList.toggle('hidden', tab !== 'all');
         document.getElementById('resultPanel').classList.toggle('hidden', tab !== 'result');
+        document.getElementById('quizFooter').classList.toggle('show', tab === 'current');
         if (tab === 'all') renderQuestionNav();
     }
 
@@ -567,6 +584,7 @@
         else if (rate >= 70) { emoji.textContent = '🎉'; title.textContent = '做得不错！'; desc.textContent = '继续努力，可以更好！'; }
         else if (rate >= 50) { emoji.textContent = '💪'; title.textContent = '还需要加油！'; desc.textContent = '建议多练习错题！'; }
         else { emoji.textContent = '📚'; title.textContent = '继续学习！'; desc.textContent = '建议查看错题解析后再试！'; }
+        document.getElementById('quizFooter').classList.remove('show');
         switchTab('result');
     }
 
