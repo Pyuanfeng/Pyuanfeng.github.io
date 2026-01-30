@@ -38,9 +38,13 @@
         .btn-success { background: var(--success); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 10; margin-bottom: 70px; }
-        .quiz-footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); padding: 12px 16px; border-top: 1px solid var(--border); display: none; z-index: 100; }
+        .quiz-footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); padding: 12px 16px; border-top: 1px solid var(--border); display: none; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
         .quiz-footer.show { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-        .quiz-footer .btn { flex: 1; max-width: 150px; }
+        .quiz-footer .btn { flex: 1; max-width: 180px; }
+        @media (min-width: 768px) {
+            .quiz-footer { max-width: 800px; margin: 0 auto; left: 50%; transform: translateX(-50%); border-radius: 12px 12px 0 0; padding: 16px 24px; }
+            .quiz-footer .btn { max-width: 200px; padding: 14px 28px; }
+        }
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #7c3aed); transition: width 0.3s ease; }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -143,11 +147,6 @@
                     <div class="question-text" id="questionText"></div>
                     <div class="options" id="optionsContainer"></div>
                     <div class="answer-result" id="answerResult"><div class="answer-text" id="answerText"></div></div>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-outline" id="prevBtn" onclick="prevQuestion()">上一题</button>
-                    <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">确认答案</button>
-                    <button class="btn btn-success" id="nextBtn" onclick="nextQuestion()">下一题</button>
                 </div>
             </div>
             <div class="quiz-footer" id="quizFooter">
@@ -442,13 +441,10 @@
         });
 
         document.getElementById('answerResult').classList.remove('show', 'correct', 'wrong');
-        document.getElementById('prevBtn').disabled = currentIndex === 0;
         document.getElementById('footerPrevBtn').disabled = currentIndex === 0;
-        document.getElementById('submitBtn').style.display = 'inline-block';
         document.getElementById('footerSubmitBtn').style.display = 'inline-block';
-        document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('footerNextBtn').style.display = 'none';
-        document.getElementById('quizFooter').classList.remove('show');
+        document.getElementById('quizFooter').classList.add('show');
         updateQuestionNav();
     }
 
@@ -508,11 +504,8 @@
 
         if (!isCorrect) { window.wrongQuestionIds.add(q.id); saveWrongAnswers(); }
 
-        document.getElementById('submitBtn').style.display = 'none';
         document.getElementById('footerSubmitBtn').style.display = 'none';
-        document.getElementById('nextBtn').style.display = 'inline-block';
         document.getElementById('footerNextBtn').style.display = 'inline-block';
-        document.getElementById('quizFooter').classList.add('show');
         updateStats();
     }
 
@@ -523,8 +516,6 @@
     function nextQuestion() {
         if (currentIndex < currentQuestions.length - 1) {
             currentIndex++;
-            // 先重置状态，再渲染
-            document.getElementById('quizFooter').classList.remove('show');
             renderQuestion();
             updateProgress();
         } else {
@@ -542,7 +533,7 @@
         document.getElementById('questionPanel').classList.toggle('hidden', tab !== 'current');
         document.getElementById('qNavPanel').classList.toggle('hidden', tab !== 'all');
         document.getElementById('resultPanel').classList.toggle('hidden', tab !== 'result');
-        document.getElementById('quizFooter').classList.toggle('show', tab === 'current' && document.getElementById('answerResult').classList.contains('show'));
+        document.getElementById('quizFooter').classList.toggle('show', tab === 'current');
         if (tab === 'all') renderQuestionNav();
     }
 
