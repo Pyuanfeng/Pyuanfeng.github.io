@@ -455,6 +455,10 @@
     function toggleOption(letter) {
         var q = currentQuestions[currentIndex];
         if (!q) return;
+
+        // 如果已经提交过答案，不允许再修改
+        if (document.getElementById('answerResult').classList.contains('show')) return;
+
         var key = 'q_' + currentIndex;
         if (!selectedAnswers[key]) selectedAnswers[key] = '';
         var current = selectedAnswers[key];
