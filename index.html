@@ -136,7 +136,7 @@
             </div>
             <div id="questionPanel">
                 <div class="card">
-                    <div><span class="q-badge" id="qBadge">单选题</span><span class="q-category" id="qCategory"></span></div>
+                    <div><span class="q-badge" id="qBadge">单选题</span><span class="q-category" id="qSetName" style="margin-left: 8px;"></span><span class="q-category" id="qCategory"></span></div>
                     <div class="question-text" id="questionText"></div>
                     <div class="options" id="optionsContainer"></div>
                     <div class="answer-result" id="answerResult"><div class="answer-text" id="answerText"></div></div>
@@ -413,6 +413,7 @@
         badge.textContent = isMultiple ? '多选题' : '单选题';
         badge.className = 'q-badge' + (isMultiple ? ' multiple' : '');
         document.getElementById('qCategory').textContent = q.category || '';
+        document.getElementById('qSetName').textContent = questionSets[currentSet] ? questionSets[currentSet].name : '';
         document.getElementById('questionText').textContent = (q.id) + '. ' + q.question;
 
         var container = document.getElementById('optionsContainer');
