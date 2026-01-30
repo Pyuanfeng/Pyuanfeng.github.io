@@ -88,10 +88,6 @@
         <div id="homeScreen" class="hidden">
             <div class="home-banner"><h2>在线答题系统</h2><p>放射防护 / 医学影像 / 辐射安全综合题库</p></div>
             <div class="card"><h4 style="margin-bottom: 12px;">选择题库</h4>
-                <div class="header-stats" style="margin-bottom: 12px;">
-                    <span>单选题: <strong id="singleCount">0</strong></span>
-                    <span>多选题: <strong id="multipleCount">0</strong></span>
-                </div>
                 <div class="type-filter" id="setFilter">
                     <button class="set-btn active" data-set="all" onclick="selectSet('all')">全部题库</button>
                     <button class="set-btn" data-set="allQuestions" onclick="selectSet('allQuestions')">辐射安全管理</button>
@@ -99,7 +95,7 @@
                     <button class="set-btn" data-set="questions_xshezhen" onclick="selectSet('questions_xshezhen')">医用X射线诊断</button>
                     <button class="set-btn" data-set="questions_keyan" onclick="selectSet('questions_keyan')">科研生产及其他</button>
                 </div>
-                <div style="font-size: 0.875rem; color: var(--text-light);">当前题库: <span id="currentSetName">全部题库</span>，共 <span id="setQuestionCount">0</span> 题</div>
+                <div style="font-size: 0.875rem; color: var(--text-light);">当前题库: <span id="currentSetName">全部题库</span>，共 <span id="setQuestionCount">0</span> 题（单选<span id="singleCount">0</span>，多选<span id="multipleCount">0</span>）</div>
             </div>
             <div class="card" id="categoryCard"><h4 style="margin-bottom: 12px;">章节筛选</h4>
                 <div class="type-filter" id="categoryFilter">
