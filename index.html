@@ -521,12 +521,20 @@
     }
 
     function nextQuestion() {
-        document.getElementById('quizFooter').classList.remove('show');
-        if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); updateProgress(); }
-        else { showResult(); }
+        if (currentIndex < currentQuestions.length - 1) {
+            currentIndex++;
+            // 先重置状态，再渲染
+            document.getElementById('quizFooter').classList.remove('show');
+            renderQuestion();
+            updateProgress();
+        } else {
+            showResult();
+        }
     }
 
+    var lastTab = 'current';
     function switchTab(tab) {
+        lastTab = tab;
         document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
         var tabMap = {current: 'Current', all: 'All', result: 'Result'};
         var el = document.getElementById('tab' + tabMap[tab]);
@@ -534,7 +542,7 @@
         document.getElementById('questionPanel').classList.toggle('hidden', tab !== 'current');
         document.getElementById('qNavPanel').classList.toggle('hidden', tab !== 'all');
         document.getElementById('resultPanel').classList.toggle('hidden', tab !== 'result');
-        document.getElementById('quizFooter').classList.toggle('show', tab === 'current');
+        document.getElementById('quizFooter').classList.toggle('show', tab === 'current' && document.getElementById('answerResult').classList.contains('show'));
         if (tab === 'all') renderQuestionNav();
     }
 
@@ -595,6 +603,7 @@
     function restartQuiz() { startPractice(quizMode); }
 
     function goHome() {
+        lastTab = 'current';
         document.getElementById('homeScreen').classList.remove('hidden');
         document.getElementById('quizScreen').classList.add('hidden');
         switchTab('current');
